@@ -1,0 +1,30 @@
+BasedOnStyle:  WebKit
+
+ColumnLimit: 80
+IndentWidth: 4
+AlignAfterOpenBracket: BlockIndent
+
+ExperimentalAutoDetectBinPacking: false
+BinPackParameters: false
+AllowAllParametersOfDeclarationOnNextLine: false
+BinPackArguments: false
+AllowAllArgumentsOnNextLine: false
+
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel:        false
+  AfterClass:            false
+  AfterControlStatement: false
+  AfterEnum:             false
+  AfterFunction:         false
+  AfterNamespace:        false
+  AfterStruct:           false
+  AfterUnion:            false
+  AfterExternBlock:      false
+  BeforeCatch:           false
+  BeforeElse:            false
+  IndentBraces:          false
+  SplitEmptyFunction:    false
+  SplitEmptyRecord:      false
+  SplitEmptyNamespace:   false
+
