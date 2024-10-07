@@ -39,12 +39,12 @@ int main(int argc, char* argv[]) {
     float time_per_it_ns;
 
     int integer_to_read;
-    int integers_to_read[N_INTS];
-    int integers_to_write[N_INTS];
-    // for (int i = 0; i < N_INTS; ++i) {
-    //     printf("%d\n", i);
-    //     integers_to_write[i] = i;
-    // }
+    int* integers_to_read = (int*)malloc(N_INTS * sizeof(int));
+    int* integers_to_write = (int*)malloc(N_INTS * sizeof(int));
+    for (int i = 0; i < N_INTS; ++i) {
+        printf("%d\n", i);
+        integers_to_write[i] = i;
+    }
 
     // DEALING WITH INDIVIDUAL INTEGERS
 
