@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
     printf("Running benchmark %s\n", argv[0]);
 
     struct timespec start_time, end_time;
-    float time_diff_ns;
+    float time_per_it_ns;
 
     // Writing to HDD
 
@@ -43,19 +43,22 @@ int main(int argc, char* argv[]) {
     }
 
     get_timestamp(&start_time);
-    for (int i = 0; i <= INTS_TO_SUM; ++i) {
-        fwrite(&i, sizeof(int), 1, fp_w_hdd);
-        fflush(fp_w_hdd);
+    for (int idx; idx < BENCH_ITS; ++idx) {
+        for (int i = 0; i <= INTS_TO_SUM; ++i) {
+            fwrite(&i, sizeof(int), 1, fp_w_hdd);
+            fflush(fp_w_hdd);
+        }
     }
     get_timestamp(&end_time);
 
     fclose(fp_w_hdd);
 
-    time_diff_ns = (float)time_difference_ns(&end_time, &start_time);
+    time_per_it_ns
+        = (float)time_difference_ns(&end_time, &start_time) / (float)BENCH_ITS;
     printf(
         "Written the first %d integers to HDD individually in %f [ns]\n",
         INTS_TO_SUM,
-        time_diff_ns
+        time_per_it_ns
     );
 
     // Reading from HDD
@@ -67,19 +70,21 @@ int main(int argc, char* argv[]) {
 
     get_timestamp(&start_time);
     int integer;
-    for (int i = 0; i <= INTS_TO_SUM; ++i) {
-        fread(&integer, sizeof(int), 1, fp_r_hdd);
+    for (int idx; idx < BENCH_ITS; ++idx) {
+        for (int i = 0; i <= INTS_TO_SUM; ++i) {
+            fread(&integer, sizeof(int), 1, fp_r_hdd);
+        }
     }
     get_timestamp(&end_time);
 
     fclose(fp_r_hdd);
 
-    time_diff_ns
+    time_per_it_ns
         = (float)time_difference_ns(&end_time, &start_time) / (float)BENCH_ITS;
     printf(
         "Read the first %d integers from HDD individually in %f [ns]\n",
         INTS_TO_SUM,
-        time_diff_ns
+        time_per_it_ns
     );
 
     // Writing to SSD
@@ -90,19 +95,22 @@ int main(int argc, char* argv[]) {
     }
 
     get_timestamp(&start_time);
-    for (int i = 0; i <= INTS_TO_SUM; ++i) {
-        fwrite(&i, sizeof(int), 1, fp_w_ssd);
-        fflush(fp_w_ssd);
+    for (int idx; idx < BENCH_ITS; ++idx) {
+        for (int i = 0; i <= INTS_TO_SUM; ++i) {
+            fwrite(&i, sizeof(int), 1, fp_w_ssd);
+            fflush(fp_w_ssd);
+        }
     }
     get_timestamp(&end_time);
 
     fclose(fp_w_ssd);
 
-    time_diff_ns = (float)time_difference_ns(&end_time, &start_time);
+    time_per_it_ns
+        = (float)time_difference_ns(&end_time, &start_time) / (float)BENCH_ITS;
     printf(
         "Written the first %d integers to SSD individually in %f [ns]\n",
         INTS_TO_SUM,
-        time_diff_ns
+        time_per_it_ns
     );
 
     // Reading from SSD
@@ -113,19 +121,21 @@ int main(int argc, char* argv[]) {
     }
 
     get_timestamp(&start_time);
-    for (int i = 0; i <= INTS_TO_SUM; ++i) {
-        fread(&integer, sizeof(int), 1, fp_r_ssd);
+    for (int idx; idx < BENCH_ITS; ++idx) {
+        for (int i = 0; i <= INTS_TO_SUM; ++i) {
+            fread(&integer, sizeof(int), 1, fp_r_ssd);
+        }
     }
     get_timestamp(&end_time);
 
     fclose(fp_r_ssd);
 
-    time_diff_ns
+    time_per_it_ns
         = (float)time_difference_ns(&end_time, &start_time) / (float)BENCH_ITS;
     printf(
         "Read the first %d integers from SSD individually in %f [ns]\n",
         INTS_TO_SUM,
-        time_diff_ns
+        time_per_it_ns
     );
 
     return 0;
