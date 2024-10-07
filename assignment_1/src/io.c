@@ -252,20 +252,17 @@ int main(int argc, char* argv[]) {
         time_per_it_ns
     );
 
-    // Reading from SSD as array
+    // Reading from HDD as array
 
-    FILE* fpp = fopen(SSD_ARRAY_DIR, "r");
+    FILE* fpp = fopen(HDD_ARRAY_DIR, "r");
     if (fpp == NULL) {
         printf("Error while requesting file handle: %s\n", strerror(errno));
     }
 
     get_timestamp(&start_time);
-    get_timestamp(&start_time);
     for (int idx; idx < BENCH_ITS; ++idx) {
-        fread(&integers_to_read, sizeof(int), N_INTS, fpp);
-        printf("READ INTEGERS ARRAY\n");
+        fread(integers_to_read, sizeof(int), N_INTS, fpp);
     }
-    get_timestamp(&end_time);
     get_timestamp(&end_time);
 
     fclose(fpp);
@@ -273,7 +270,7 @@ int main(int argc, char* argv[]) {
     time_per_it_ns
         = (float)time_difference_ns(&end_time, &start_time) / (float)BENCH_ITS;
     printf(
-        "AGAIB Read the first %d integers from SSD as array in %f [ns]\n",
+        "Read the first %d integers from HDD as array in %f [ns]\n",
         N_INTS,
         time_per_it_ns
     );
