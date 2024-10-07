@@ -232,7 +232,7 @@ int main(int argc, char* argv[]) {
     get_timestamp(&start_time);
     for (int idx; idx < BENCH_ITS; ++idx) {
         fread(&integers_to_read, sizeof(int), N_INTS, fp_r_array_ssd);
-        printf("READ INTEGERS ARRAY");
+        printf("READ INTEGERS ARRAY\n");
     }
     get_timestamp(&end_time);
 
@@ -242,6 +242,30 @@ int main(int argc, char* argv[]) {
         = (float)time_difference_ns(&end_time, &start_time) / (float)BENCH_ITS;
     printf(
         "Read the first %d integers from SSD as array in %f [ns]\n",
+        N_INTS,
+        time_per_it_ns
+    );
+
+    // Reading from SSD as array
+
+    FILE* fpp = fopen(SSD_ARRAY_DIR, "r");
+    if (fpp == NULL) {
+        printf("Error while requesting file handle: %s\n", strerror(errno));
+    }
+
+    get_timestamp(&start_time);
+    for (int idx; idx < BENCH_ITS; ++idx) {
+        fread(&integers_to_read, sizeof(int), N_INTS, fpp);
+        printf("READ INTEGERS ARRAY\n");
+    }
+    get_timestamp(&end_time);
+
+    fclose(fpp);
+
+    time_per_it_ns
+        = (float)time_difference_ns(&end_time, &start_time) / (float)BENCH_ITS;
+    printf(
+        "AGAIB Read the first %d integers from SSD as array in %f [ns]\n",
         N_INTS,
         time_per_it_ns
     );
