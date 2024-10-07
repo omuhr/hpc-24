@@ -42,7 +42,6 @@ int main(int argc, char* argv[]) {
     int* integers_to_read = (int*)malloc(N_INTS * sizeof(int));
     int* integers_to_write = (int*)malloc(N_INTS * sizeof(int));
     for (int i = 0; i < N_INTS; ++i) {
-        printf("%d\n", i);
         integers_to_write[i] = i;
     }
 
