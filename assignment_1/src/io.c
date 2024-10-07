@@ -8,6 +8,8 @@ long ONE_SEC = 1e9;
 int BENCH_ITS = 1;
 int INTS_TO_SUM = (1 << 20);
 int SIZE = 1e6;
+char HDD_DIR[] = "./hdd_data.bin";
+char SSD_DIR[] = "/run/mount/scratch/hpcuser111_2024/ssd_data.bin";
 
 long timespec_to_ns(struct timespec* timestamp) {
     return (timestamp->tv_sec * ONE_SEC + timestamp->tv_nsec);
@@ -35,7 +37,7 @@ int main(int argc, char* argv[]) {
 
     // Writing to HDD
 
-    FILE* fp_w_hdd = fopen("./hdd_data.bin", "w");
+    FILE* fp_w_hdd = fopen(HDD_DIR, "w");
     if (fp_w_hdd == NULL) {
         printf("Error while requesting file handle: %s\n", strerror(errno));
     }
@@ -58,7 +60,7 @@ int main(int argc, char* argv[]) {
 
     // Reading from HDD
 
-    FILE* fp_r_hdd = fopen("./hdd_data.bin", "r");
+    FILE* fp_r_hdd = fopen(HDD_DIR, "r");
     if (fp_r_hdd == NULL) {
         printf("Error while requesting file handle: %s\n", strerror(errno));
     }
@@ -82,7 +84,7 @@ int main(int argc, char* argv[]) {
 
     // Writing to SSD
 
-    FILE* fp_w_ssd = fopen("/run/mount/scratch/hpcuser111/ssd_data.bin", "w");
+    FILE* fp_w_ssd = fopen(SSD_DIR, "w");
     if (fp_w_ssd == NULL) {
         printf("Error while requesting file handle: %s\n", strerror(errno));
     }
@@ -105,7 +107,7 @@ int main(int argc, char* argv[]) {
 
     // Reading from SSD
 
-    FILE* fp_r_ssd = fopen("/run/mount/scratch/hpcuser111/ssd_data.bin", "r");
+    FILE* fp_r_ssd = fopen(SSD_DIR, "r");
     if (fp_r_ssd == NULL) {
         printf("Error while requesting file handle: %s\n", strerror(errno));
     }
