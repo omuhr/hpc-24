@@ -254,7 +254,7 @@ int main(int argc, char* argv[]) {
 
     // Reading from HDD as array
 
-    FILE* fpp = fopen(HDD_ARRAY_DIR, "r");
+    FILE* fpp = fopen(SSD_ARRAY_DIR, "r");
     if (fpp == NULL) {
         printf("Error while requesting file handle: %s\n", strerror(errno));
     }
