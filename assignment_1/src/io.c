@@ -224,7 +224,7 @@ int main(int argc, char* argv[]) {
 
     // Reading from SSD as array
 
-    FILE* fp_r_array_ssd = fopen(SSD_ARRAY_DIR, "r");
+    FILE* fp_r_array_ssd = fopen(HDD_ARRAY_DIR, "r");
     if (fp_r_array_ssd == NULL) {
         printf("Error while requesting file handle: %s\n", strerror(errno));
     }
