@@ -232,6 +232,7 @@ int main(int argc, char* argv[]) {
     get_timestamp(&start_time);
     for (int idx; idx < BENCH_ITS; ++idx) {
         fread(&integers_to_read, sizeof(int), N_INTS, fp_r_array_ssd);
+        printf("READ INTEGERS ARRAY");
     }
     get_timestamp(&end_time);
 
