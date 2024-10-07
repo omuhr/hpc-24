@@ -41,10 +41,10 @@ int main(int argc, char* argv[]) {
     int integer_to_read;
     int integers_to_read[N_INTS];
     int integers_to_write[N_INTS];
-    for (int i = 0; i < N_INTS; ++i) {
-        printf("%d\n", i);
-        integers_to_write[i] = i;
-    }
+    // for (int i = 0; i < N_INTS; ++i) {
+    //     printf("%d\n", i);
+    //     integers_to_write[i] = i;
+    // }
 
     // DEALING WITH INDIVIDUAL INTEGERS
 
