@@ -245,5 +245,8 @@ int main(int argc, char* argv[]) {
         time_per_it_ns
     );
 
+    free(integers_to_read);
+    free(integers_to_write);
+
     return 0;
 }
