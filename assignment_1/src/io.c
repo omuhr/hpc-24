@@ -236,6 +236,12 @@ int main(int argc, char* argv[]) {
     }
     get_timestamp(&end_time);
 
+    printf(
+        "START TIME: %ld, END TIME: %ld",
+        timespec_to_ns(&start_time),
+        timespec_to_ns(&end_time)
+    );
+
     fclose(fp_r_array_ssd);
 
     time_per_it_ns
