@@ -6,10 +6,13 @@
 
 long ONE_SEC = 1e9;
 int BENCH_ITS = 1;
-int INTS_TO_SUM = (1 << 20);
+int N_INTS = (1 << 20);
 int SIZE = 1e6;
-char HDD_DIR[] = "./hdd_data.bin";
-char SSD_DIR[] = "/run/mount/scratch/hpcuser111_2024/ssd_data.bin";
+char HDD_INDIVIDUAL_DIR[] = "./hdd_data_individually.bin";
+char SSD_INDIVIDUAL_DIR[]
+    = "/run/mount/scratch/hpcuser111_2024/ssd_data_individually.bin";
+char HDD_ARRAY_DIR[] = "./hdd_data_array.bin";
+char SSD_ARRAY_DIR[] = "/run/mount/scratch/hpcuser111_2024/ssd_data_array.bin";
 
 long timespec_to_ns(struct timespec* timestamp) {
     return (timestamp->tv_sec * ONE_SEC + timestamp->tv_nsec);
@@ -35,17 +38,26 @@ int main(int argc, char* argv[]) {
     struct timespec start_time, end_time;
     float time_per_it_ns;
 
-    // Writing to HDD
+    int integer_to_read;
+    int integers_to_read[N_INTS];
+    int integers_to_write[N_INTS];
+    for (int i = 1; i <= N_INTS; ++i) {
+        integers_to_write[i] = i;
+    }
 
-    FILE* fp_w_hdd = fopen(HDD_DIR, "w");
+    // DEALING WITH INDIVIDUAL INTEGERS
+
+    // Writing to HDD individually
+
+    FILE* fp_w_hdd = fopen(HDD_INDIVIDUAL_DIR, "w");
     if (fp_w_hdd == NULL) {
         printf("Error while requesting file handle: %s\n", strerror(errno));
     }
 
     get_timestamp(&start_time);
     for (int idx; idx < BENCH_ITS; ++idx) {
-        for (int i = 0; i <= INTS_TO_SUM; ++i) {
-            fwrite(&i, sizeof(int), 1, fp_w_hdd);
+        for (int i = 0; i <= N_INTS; ++i) {
+            fwrite(&integers_to_write[i], sizeof(int), 1, fp_w_hdd);
             fflush(fp_w_hdd);
         }
     }
@@ -57,22 +69,21 @@ int main(int argc, char* argv[]) {
         = (float)time_difference_ns(&end_time, &start_time) / (float)BENCH_ITS;
     printf(
         "Written the first %d integers to HDD individually in %f [ns]\n",
-        INTS_TO_SUM,
+        N_INTS,
         time_per_it_ns
     );
 
-    // Reading from HDD
+    // Reading from HDD individually
 
-    FILE* fp_r_hdd = fopen(HDD_DIR, "r");
+    FILE* fp_r_hdd = fopen(HDD_INDIVIDUAL_DIR, "r");
     if (fp_r_hdd == NULL) {
         printf("Error while requesting file handle: %s\n", strerror(errno));
     }
 
     get_timestamp(&start_time);
-    int integer;
     for (int idx; idx < BENCH_ITS; ++idx) {
-        for (int i = 0; i <= INTS_TO_SUM; ++i) {
-            fread(&integer, sizeof(int), 1, fp_r_hdd);
+        for (int i = 0; i <= N_INTS; ++i) {
+            fread(&integer_to_read, sizeof(int), 1, fp_r_hdd);
         }
     }
     get_timestamp(&end_time);
@@ -83,21 +94,21 @@ int main(int argc, char* argv[]) {
         = (float)time_difference_ns(&end_time, &start_time) / (float)BENCH_ITS;
     printf(
         "Read the first %d integers from HDD individually in %f [ns]\n",
-        INTS_TO_SUM,
+        N_INTS,
         time_per_it_ns
     );
 
-    // Writing to SSD
+    // Writing to SSD individually
 
-    FILE* fp_w_ssd = fopen(SSD_DIR, "w");
+    FILE* fp_w_ssd = fopen(SSD_INDIVIDUAL_DIR, "w");
     if (fp_w_ssd == NULL) {
         printf("Error while requesting file handle: %s\n", strerror(errno));
     }
 
     get_timestamp(&start_time);
     for (int idx; idx < BENCH_ITS; ++idx) {
-        for (int i = 0; i <= INTS_TO_SUM; ++i) {
-            fwrite(&i, sizeof(int), 1, fp_w_ssd);
+        for (int i = 0; i <= N_INTS; ++i) {
+            fwrite(&integers_to_write[i], sizeof(int), 1, fp_w_ssd);
             fflush(fp_w_ssd);
         }
     }
@@ -109,21 +120,21 @@ int main(int argc, char* argv[]) {
         = (float)time_difference_ns(&end_time, &start_time) / (float)BENCH_ITS;
     printf(
         "Written the first %d integers to SSD individually in %f [ns]\n",
-        INTS_TO_SUM,
+        N_INTS,
         time_per_it_ns
     );
 
-    // Reading from SSD
+    // Reading from SSD individually
 
-    FILE* fp_r_ssd = fopen(SSD_DIR, "r");
+    FILE* fp_r_ssd = fopen(SSD_INDIVIDUAL_DIR, "r");
     if (fp_r_ssd == NULL) {
         printf("Error while requesting file handle: %s\n", strerror(errno));
     }
 
     get_timestamp(&start_time);
     for (int idx; idx < BENCH_ITS; ++idx) {
-        for (int i = 0; i <= INTS_TO_SUM; ++i) {
-            fread(&integer, sizeof(int), 1, fp_r_ssd);
+        for (int i = 0; i <= N_INTS; ++i) {
+            fread(&integer_to_read, sizeof(int), 1, fp_r_ssd);
         }
     }
     get_timestamp(&end_time);
@@ -134,7 +145,103 @@ int main(int argc, char* argv[]) {
         = (float)time_difference_ns(&end_time, &start_time) / (float)BENCH_ITS;
     printf(
         "Read the first %d integers from SSD individually in %f [ns]\n",
-        INTS_TO_SUM,
+        N_INTS,
+        time_per_it_ns
+    );
+
+    // DEALING WITH ARRAYS
+
+    // Writing to HDD as array
+
+    FILE* fp_w_array_hdd = fopen(HDD_ARRAY_DIR, "w");
+    if (fp_w_array_hdd == NULL) {
+        printf("Error while requesting file handle: %s\n", strerror(errno));
+    }
+
+    get_timestamp(&start_time);
+    for (int idx; idx < BENCH_ITS; ++idx) {
+        fwrite(integers_to_write, sizeof(int), N_INTS, fp_w_array_hdd);
+        fflush(fp_w_array_hdd);
+    }
+    get_timestamp(&end_time);
+
+    fclose(fp_w_array_hdd);
+
+    time_per_it_ns
+        = (float)time_difference_ns(&end_time, &start_time) / (float)BENCH_ITS;
+    printf(
+        "Written the first %d integers to HDD as array in %f [ns]\n",
+        N_INTS,
+        time_per_it_ns
+    );
+
+    // Reading from HDD as array
+
+    FILE* fp_r_array_hdd = fopen(HDD_ARRAY_DIR, "r");
+    if (fp_r_array_hdd == NULL) {
+        printf("Error while requesting file handle: %s\n", strerror(errno));
+    }
+
+    get_timestamp(&start_time);
+    for (int idx; idx < BENCH_ITS; ++idx) {
+        fread(integers_to_read, sizeof(int), N_INTS, fp_r_array_hdd);
+    }
+    get_timestamp(&end_time);
+
+    fclose(fp_r_array_hdd);
+
+    time_per_it_ns
+        = (float)time_difference_ns(&end_time, &start_time) / (float)BENCH_ITS;
+    printf(
+        "Read the first %d integers from HDD as array in %f [ns]\n",
+        N_INTS,
+        time_per_it_ns
+    );
+
+    // Writing to SSD as array
+
+    FILE* fp_w_array_ssd = fopen(SSD_ARRAY_DIR, "w");
+    if (fp_w_array_ssd == NULL) {
+        printf("Error while requesting file handle: %s\n", strerror(errno));
+    }
+
+    get_timestamp(&start_time);
+    for (int idx; idx < BENCH_ITS; ++idx) {
+        fwrite(&integers_to_write, sizeof(int), N_INTS, fp_w_array_ssd);
+        fflush(fp_w_array_ssd);
+    }
+    get_timestamp(&end_time);
+
+    fclose(fp_w_array_ssd);
+
+    time_per_it_ns
+        = (float)time_difference_ns(&end_time, &start_time) / (float)BENCH_ITS;
+    printf(
+        "Written the first %d integers to SSD as array in %f [ns]\n",
+        N_INTS,
+        time_per_it_ns
+    );
+
+    // Reading from SSD as array
+
+    FILE* fp_r_array_ssd = fopen(SSD_ARRAY_DIR, "r");
+    if (fp_r_array_ssd == NULL) {
+        printf("Error while requesting file handle: %s\n", strerror(errno));
+    }
+
+    get_timestamp(&start_time);
+    for (int idx; idx < BENCH_ITS; ++idx) {
+        fread(&integers_to_read, sizeof(int), N_INTS, fp_r_array_ssd);
+    }
+    get_timestamp(&end_time);
+
+    fclose(fp_r_array_ssd);
+
+    time_per_it_ns
+        = (float)time_difference_ns(&end_time, &start_time) / (float)BENCH_ITS;
+    printf(
+        "Read the first %d integers from SSD as array in %f [ns]\n",
+        N_INTS,
         time_per_it_ns
     );
 
