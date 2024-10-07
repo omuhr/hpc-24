@@ -260,10 +260,12 @@ int main(int argc, char* argv[]) {
     }
 
     get_timestamp(&start_time);
+    get_timestamp(&start_time);
     for (int idx; idx < BENCH_ITS; ++idx) {
         fread(&integers_to_read, sizeof(int), N_INTS, fpp);
         printf("READ INTEGERS ARRAY\n");
     }
+    get_timestamp(&end_time);
     get_timestamp(&end_time);
 
     fclose(fpp);
